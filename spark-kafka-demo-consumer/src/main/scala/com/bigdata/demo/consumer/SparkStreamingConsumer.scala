@@ -19,7 +19,6 @@ import org.apache.spark.streaming.kafka010.{ConsumerStrategies, KafkaUtils, Loca
   * 缺点:
   * A、无法使用基于 zookeeper 的 Kafka 监控工具;
   * B、spark中的executor的工作的个数就为kafka中的partition一致，设置再多的executor都不工作;
-  * C、偏移量也需要自己维护。
   */
 object SparkStreamingConsumer {
   def main(args: Array[String]): Unit = {
