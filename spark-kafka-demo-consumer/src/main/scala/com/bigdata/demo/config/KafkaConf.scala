@@ -19,7 +19,7 @@ object KafkaConf {
   /**
     * 消费主题
     */
-  val TOPIC = "test1"
+  val TOPIC = "demo"
 
   /**
     * 消费者组

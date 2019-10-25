@@ -22,7 +22,7 @@ public class DemoServiceImpl implements DemoService {
 
     @Override
     public void saveKey(String key) {
-        kafkaTemplate.send("test", key);
+        kafkaTemplate.send("demo", key);
         logger.info("kafka send message success, message is 【" +key+ "】");
     }
 }
