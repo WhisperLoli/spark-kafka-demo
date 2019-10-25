@@ -31,8 +31,13 @@ object SparkStreamingConsumer {
     val ssc = new StreamingContext(spark.sparkContext, Seconds(KafkaConf.TIME_INTERVAL))
 
     // 配置基本参数
-    val kafkaParams = Map("metadata.broker.list" -> KafkaConf.KAFKA_BROKER,
-      "auto.offset.reset" -> AutoOffsetResetEnum.Earliest.toString, "group.id" -> KafkaConf.CUSTOM_GROUP)
+    val kafkaParams = Map(
+      "auto.offset.reset" -> AutoOffsetResetEnum.Earliest.toString,
+      "group.id" -> KafkaConf.CUSTOM_GROUP,
+      "key.deserializer" -> KafkaConf.KEY_DESERIALIZER,
+      "value.deserializer" -> KafkaConf.VALE_DESERIALIZER,
+      "bootstrap.servers" -> KafkaConf.BOOTSTRAP_SERVERS
+    )
 
     // topic组
     val topicsSet = KafkaConf.TOPIC.split(",").toSet
@@ -42,13 +47,11 @@ object SparkStreamingConsumer {
       LocationStrategies.PreferConsistent,
       ConsumerStrategies.Subscribe[String, String](topicsSet, kafkaParams))
 
-    // Get the lines, split them into words, count the words and print
     val lines = messages.map(_.value)
     val words = lines.flatMap(_.split(" "))
     val wordCounts = words.map(x => (x, 1L)).reduceByKey(_ + _)
     wordCounts.print()
 
-    // Start the computation
     ssc.start()
     ssc.awaitTermination()
   }

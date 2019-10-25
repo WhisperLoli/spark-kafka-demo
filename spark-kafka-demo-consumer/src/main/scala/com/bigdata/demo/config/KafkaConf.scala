@@ -9,12 +9,17 @@ object KafkaConf {
   /**
     * brokers节点，IP:PORT,IP:PORT...
     */
-  val KAFKA_BROKER = "127.0.0.1:2081"
+  val KAFKA_BROKER = "127.0.0.1:9092"
+
+  /**
+    * servers节点信息
+    */
+  val BOOTSTRAP_SERVERS = "127.0.0.1:9092"
 
   /**
     * 消费主题
     */
-  val TOPIC = "test"
+  val TOPIC = "test1"
 
   /**
     * 消费者组
@@ -29,10 +34,10 @@ object KafkaConf {
   /**
     * key反序列化
     */
-  val KEY_DESERIALIZER = "org.apache.kafka.common.serialization.StringSerializer"
+  val KEY_DESERIALIZER = "org.apache.kafka.common.serialization.StringDeserializer"
 
   /**
     * value反序列化
     */
-  val VALE_DESERIALIZER = "org.apache.kafka.common.serialization.StringSerializer"
+  val VALE_DESERIALIZER = "org.apache.kafka.common.serialization.StringDeserializer"
 }
