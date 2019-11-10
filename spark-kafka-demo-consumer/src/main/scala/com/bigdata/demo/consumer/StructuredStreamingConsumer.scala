@@ -3,6 +3,8 @@ package com.bigdata.demo.consumer
 import com.bigdata.demo.config.KafkaConf
 import com.bigdata.demo.enums.AutoOffsetResetEnum
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions._
+import org.apache.spark.sql.streaming.OutputMode
 
 /**
   * @author nengjun.hu
@@ -17,6 +19,10 @@ object StructuredStreamingConsumer {
       .appName("structured streaming consumer")
       .getOrCreate()
 
+    spark.sparkContext.setLogLevel("WARN")
+
+    import spark.implicits._
+
     val df = spark
       .readStream
       .format("kafka")
@@ -29,10 +35,15 @@ object StructuredStreamingConsumer {
       .option("auto.offset.reset", AutoOffsetResetEnum.Earliest.toString)
       .load()
 
-    val result = df.writeStream
-      .outputMode("append")
-      .format("console")
-      .start()
+    val result = df
+        .select($"value".cast("string"), $"timestamp")
+        .withWatermark("timestamp","1 minute")
+        .groupBy(window($"timestamp", "1 minutes", "1 minutes"), $"value")
+        .count()
+        .writeStream
+        .outputMode(OutputMode.Append())
+        .format("console")
+        .start()
 
     result.awaitTermination()
 
