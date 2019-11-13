@@ -5,6 +5,7 @@ import com.bigdata.demo.enums.AutoOffsetResetEnum
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.streaming.OutputMode
+import org.apache.spark.sql.types.{StringType, StructType}
 
 /**
   * @author nengjun.hu
@@ -35,18 +36,16 @@ object StructuredStreamingConsumer {
       .option("auto.offset.reset", AutoOffsetResetEnum.Earliest.toString)
       .load()
 
-    val result = df
-        .select($"value".cast("string"), $"timestamp")
-        .withWatermark("timestamp","1 minute")
-        .groupBy(window($"timestamp", "1 minutes", "1 minutes"), $"value")
-        .count()
-        .writeStream
-        .outputMode(OutputMode.Append())
-        .format("console")
-        .start()
+    val schema = new StructType().add("value", StringType, true)
 
-    result.awaitTermination()
-
-
+    df.select($"value".cast(StringType).alias("value"), $"timestamp")
+      .withWatermark("timestamp","1 minute")
+      .groupBy(window($"timestamp", "1 minutes", "1 minutes"), $"value")
+      .count()
+      .writeStream
+      .outputMode(OutputMode.Complete())
+      .format("console")
+      .start()
+      .awaitTermination()
   }
 }
