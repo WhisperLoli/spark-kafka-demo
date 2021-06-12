@@ -1,6 +1,5 @@
 package com.spark.demo.consumer
 
-import com.bigdata.demo.enums.AutoOffsetResetEnum
 import com.spark.demo.config.KafkaConf
 import com.spark.demo.enums.AutoOffsetResetEnum
 import org.apache.spark.sql.SparkSession
