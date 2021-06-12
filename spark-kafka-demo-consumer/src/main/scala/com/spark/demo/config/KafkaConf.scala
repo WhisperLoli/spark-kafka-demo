@@ -1,4 +1,4 @@
-package com.bigdata.demo.config
+package com.spark.demo.config
 
 /**
   * @author nengjun.hu
@@ -24,12 +24,12 @@ object KafkaConf {
   /**
     * 消费者组
     */
-  val CUSTOM_GROUP = "testGroup"
+  val CUSTOM_GROUP = "testGroup_hnj124"
 
   /**
     * 周期读取kafka时间间隔
     */
-  val TIME_INTERVAL = 10
+  val TIME_INTERVAL = 20
 
   /**
     * key反序列化

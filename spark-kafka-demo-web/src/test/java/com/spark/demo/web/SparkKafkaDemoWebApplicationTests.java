@@ -1,4 +1,4 @@
-package com.bigdata.demo.web;
+package com.spark.demo.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

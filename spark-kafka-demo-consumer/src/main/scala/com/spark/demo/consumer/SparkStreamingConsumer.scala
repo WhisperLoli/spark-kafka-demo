@@ -1,10 +1,11 @@
-package com.bigdata.demo.consumer
+package com.spark.demo.consumer
 
-import com.bigdata.demo.config.KafkaConf
 import com.bigdata.demo.enums.AutoOffsetResetEnum
+import com.spark.demo.config.KafkaConf
+import com.spark.demo.enums.AutoOffsetResetEnum
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.streaming.{Seconds, StreamingContext}
-import org.apache.spark.streaming.kafka010.{ConsumerStrategies, KafkaUtils, LocationStrategies}
+import org.apache.spark.streaming.kafka010._
 /**
   * Direct方式消费kafka消息
   *
@@ -35,7 +36,8 @@ object SparkStreamingConsumer {
       "group.id" -> KafkaConf.CUSTOM_GROUP,
       "key.deserializer" -> KafkaConf.KEY_DESERIALIZER,
       "value.deserializer" -> KafkaConf.VALE_DESERIALIZER,
-      "bootstrap.servers" -> KafkaConf.BOOTSTRAP_SERVERS
+      "bootstrap.servers" -> KafkaConf.BOOTSTRAP_SERVERS,
+      "enable.auto.commit" -> false.toString
     )
 
     // topic组
@@ -46,10 +48,20 @@ object SparkStreamingConsumer {
       LocationStrategies.PreferConsistent,
       ConsumerStrategies.Subscribe[String, String](topicsSet, kafkaParams))
 
-    val lines = messages.map(_.value)
-    val words = lines.flatMap(_.split(" "))
-    val wordCounts = words.map(x => (x, 1L)).reduceByKey(_ + _)
-    wordCounts.print()
+    messages.foreachRDD(rdd => {
+      val lines = rdd.map(_.value())
+      val words = lines.flatMap(_.split(" "))
+      val wordCounts = words.map(x => (x, 1L)).reduceByKey(_ + _)
+
+      val offsetRanges = rdd.asInstanceOf[HasOffsetRanges].offsetRanges
+
+      wordCounts.foreach(println(_))
+      //处理完睡眠10s
+      
+      // some time later, after outputs have completed
+      messages.asInstanceOf[CanCommitOffsets].commitAsync(offsetRanges)
+
+    })
 
     ssc.start()
     ssc.awaitTermination()

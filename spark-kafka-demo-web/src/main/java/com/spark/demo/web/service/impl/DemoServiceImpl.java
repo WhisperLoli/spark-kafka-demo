@@ -1,6 +1,6 @@
-package com.bigdata.demo.web.service.impl;
+package com.spark.demo.web.service.impl;
 
-import com.bigdata.demo.web.service.DemoService;
+import com.spark.demo.web.service.DemoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

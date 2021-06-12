@@ -1,7 +1,8 @@
-package com.bigdata.demo.consumer
+package com.spark.demo.consumer
 
-import com.bigdata.demo.config.KafkaConf
 import com.bigdata.demo.enums.AutoOffsetResetEnum
+import com.spark.demo.config.KafkaConf
+import com.spark.demo.enums.AutoOffsetResetEnum
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.streaming.OutputMode

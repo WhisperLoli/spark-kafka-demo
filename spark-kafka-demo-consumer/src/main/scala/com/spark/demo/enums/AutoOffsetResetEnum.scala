@@ -1,4 +1,4 @@
-package com.bigdata.demo.enums
+package com.spark.demo.enums
 
 /**
   * @author nengjun.hu

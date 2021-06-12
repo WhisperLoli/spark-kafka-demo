@@ -1,4 +1,4 @@
-package com.bigdata.demo.web.service;
+package com.spark.demo.web.service;
 
 /**
  * @author nengjun.hu
